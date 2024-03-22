@@ -2,7 +2,16 @@ class CarFinder:
     def __init__(self, nuImage):
         self.nuim = nuImage
 
-    def fetch_vehicles_bounding_boxes(self, image):
+    def fetch_vehicles_bboxes_from_dataset(self):
+        vehicles_positions_for_image = {}
+        for id, image in enumerate(self.nuim.sample):
+            vehicles_bboxes = self.fetch_vehicles_bboxes_from_img(
+                image
+            )
+            vehicles_positions_for_image[id] = vehicles_bboxes
+        return vehicles_positions_for_image
+
+    def fetch_vehicles_bboxes_from_img(self, image):
         vehicles_bounding_boxes = []
         objects_tokens, _ = self.nuim.list_anns(image["token"], verbose=False)
 
