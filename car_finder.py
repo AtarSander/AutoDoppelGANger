@@ -3,13 +3,13 @@ class CarFinder:
         self.nuim = nuImage
 
     def fetch_vehicles_bboxes_from_dataset(self):
-        vehicles_positions_for_image = {}
+        vehicles_bounding_boxes_dataset = {}
         for id, image in enumerate(self.nuim.sample):
             vehicles_bboxes = self.fetch_vehicles_bboxes_from_img(
                 image
             )
-            vehicles_positions_for_image[id] = vehicles_bboxes
-        return vehicles_positions_for_image
+            vehicles_bounding_boxes_dataset[id] = vehicles_bboxes
+        return vehicles_bounding_boxes_dataset
 
     def fetch_vehicles_bboxes_from_img(self, image):
         vehicles_bounding_boxes = []
@@ -22,3 +22,5 @@ class CarFinder:
             if "vehicle" in category:
                 vehicles_bounding_boxes.append(object_data["bbox"])
         return vehicles_bounding_boxes
+    # TODO: funtion for checking size of a bounding box for discarding too big or too
+    # small cars
