@@ -21,13 +21,6 @@ class ImageQualityAnalyzer:
         image_metrics["Color Balance Green"] = balance_green
         image_metrics["Color Balance Blue"] = balance_blue
         image_metrics["Uniformity"] = self.uniformity()
-        # print(f"Brightness: {self.check_brightness()}")
-        # print(f"Sharpness: {self.check_sharpness()}")
-        # print(f"Focus: {self.check_focus()}")
-        # print(f"Contrast: {self.check_contrast()}")
-        # print(f"Noise Frequency: {self.check_noise_frequency()}")
-        # print(f"Color Balance: {self.check_color_balance()}")
-        # print(f"Uniformity: {self.check_uniformity()}")
         return image_metrics
 
     def brightness(self):

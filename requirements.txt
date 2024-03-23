@@ -1,0 +1,4 @@
+opencv-python
+numpy==1.26.2
+pandas==2.2.1
+nuscenes-devkit==1.1.11
