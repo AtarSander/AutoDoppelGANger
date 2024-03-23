@@ -1,10 +1,15 @@
 import cv2
+import os
 
 
 class DataPreprocessor:
     def __init__(self, target_width, target_height):
         self.target_width = target_width
         self.target_height = target_height
+
+    def resize_dataset(self, src_dir):
+        for filename in os.listdir(src_dir):
+            self.resize_image(src_dir+"/"+filename)
 
     def resize_image(self, image_path):
         image = cv2.imread(image_path)

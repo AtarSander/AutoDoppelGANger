@@ -1,5 +1,8 @@
 import cv2
+import warnings
+import os
 import numpy as np
+import pandas as pd
 
 
 class ImageQualityAnalyzer:
@@ -7,6 +10,19 @@ class ImageQualityAnalyzer:
         self.image_path = image_path
         self.image = cv2.imread(image_path)
         self.gray_image = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
+
+    def analyze_dataset(self, src_dir):
+        df = pd.DataFrame(columns=["Image", "Brightness", "Sharpness", "Focus",
+                                   "Contrast", "Noise Frequency", "Color Balance Red",
+                                   "Color Balance Green", "Color Balance Blue",
+                                   "Uniformity"])
+        for filename in os.listdir(src_dir):
+            # pandas 2.2.1 has a FutureWarning for concatenating DataFrames with Null entries
+            with warnings.catch_warnings():
+                warnings.filterwarnings("ignore", category=FutureWarning)
+                self.set_image(src_dir+"/"+filename)
+                df = pd.concat([df, pd.DataFrame(self.analyze_image(), index=[0])],
+                               ignore_index=True)
 
     def analyze_image(self):
         image_metrics = {}
