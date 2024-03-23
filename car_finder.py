@@ -1,6 +1,8 @@
 class CarFinder:
-    def __init__(self, nuImage):
+    def __init__(self, nuImage, min_size_x, min_size_y):
         self.nuim = nuImage
+        self.min_size_x = min_size_x
+        self.min_size_y = min_size_y
 
     def fetch_vehicles_bboxes_from_dataset(self):
         vehicles_bounding_boxes_dataset = {}
@@ -19,8 +21,12 @@ class CarFinder:
             object_data = self.nuim.get("object_ann", object_token)
             category = self.nuim.get("category", object_data["category_token"])["name"]
 
-            if "vehicle" in category:
+            if "vehicle" in category and self.check_bbox_size(object_data["bbox"]):
                 vehicles_bounding_boxes.append(object_data["bbox"])
         return vehicles_bounding_boxes
     # TODO: funtion for checking size of a bounding box for discarding too big or too
     # small cars
+
+    def check_bbox_size(self, bbox):
+        x1, y1, x2, y2 = bbox
+        return abs(x2-x1) > self.min_size_x and abs(y2-y1) > self.min_size_y

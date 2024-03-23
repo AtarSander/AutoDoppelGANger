@@ -3,9 +3,9 @@ import cv2
 
 
 class CarCutter:
-    def __init__(self, nuImages):
+    def __init__(self, nuImages, min_size_x, min_size_y):
         self.nuImages = nuImages
-        self.carFinder = CarFinder(nuImages)
+        self.carFinder = CarFinder(nuImages, min_size_x, min_size_y)
 
     def cut_out_vehicles_from_dataset(self, src_dir, out_dir):
         for img_id, image in enumerate(self.nuImages.sample):
@@ -22,5 +22,4 @@ class CarCutter:
         image = cv2.imread(image_path)
         x1, y1, x2, y2 = bbox
         bbox_image = image[y1:y2, x1:x2]
-        a = cv2.imwrite(output_path, bbox_image)
-        print(a)
+        cv2.imwrite(output_path, bbox_image)
