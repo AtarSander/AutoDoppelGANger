@@ -1,11 +1,25 @@
 import cv2
 import os
-
+import torchvision.transforms as transforms
+import torchvision.datasets as datasets
 
 class DataPreprocessor:
-    def __init__(self, target_width, target_height):
+    def __init__(self, target_width, target_height, img_channels):
         self.target_width = target_width
         self.target_height = target_height
+        self.channels = img_channels
+
+    def load_dataset(self, src_dir):
+        transform = transforms.Compose(
+            [
+                transforms.Resize((self.target_width, self.target_height)),
+                transforms.ToTensor(),
+                transforms.Normalize([0.5 for _ in range(self.channels)],
+                                     [0.5 for _ in range(self.channels)]),
+            ]
+        )
+        dataset = datasets.ImageFolder(root=src_dir, transform=transform)
+        return dataset
 
     def resize_dataset(self, src_dir):
         for filename in os.listdir(src_dir):
