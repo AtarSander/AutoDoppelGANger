@@ -1,4 +1,3 @@
-import torch
 import torch.nn as nn
 
 
@@ -24,6 +23,14 @@ class Generator(nn.module):
             nn.BatchNorm2d(out_channels),
             nn.ReLU(),
         )
+    
+    def initialize_weights(self):
+        for m in self.modules():
+            if isinstance(m, nn.ConvTranspose2d):
+                nn.init.xavier_normal_(m.weight)
+            elif isinstance(m, nn.BatchNorm2d):
+                nn.init.constant_(m.weight, 1)
+                nn.init.constant_(m.bias, 0)
 
 
 class Discriminator(nn.module):
@@ -49,3 +56,12 @@ class Discriminator(nn.module):
             nn.BatchNorm2d(out_channels),
             nn.LeakyReLU(0.2),
         )
+    
+    def initialize_weights(self):
+        for m in self.modules():
+            if isinstance(m, nn.Conv2d):
+                nn.init.xavier_normal_(m.weight)
+            elif isinstance(m, nn.BatchNorm2d):
+                nn.init.constant_(m.weight, 1)
+                nn.init.constant_(m.bias, 0)
+
