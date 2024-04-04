@@ -24,8 +24,6 @@ class CarFinder:
             if "vehicle" in category and self.check_bbox_size(object_data["bbox"]):
                 vehicles_bounding_boxes.append(object_data["bbox"])
         return vehicles_bounding_boxes
-    # TODO: funtion for checking size of a bounding box for discarding too big or too
-    # small cars
 
     def check_bbox_size(self, bbox):
         x1, y1, x2, y2 = bbox

@@ -44,8 +44,8 @@ class GAN:
         self.discriminator.initialize_weights()
 
     def setup_optimizers(self, learning_rate, beta1, beta2):
-        self.opt_gen = optim.Adam(lr=learning_rate, betas=(beta1, beta2))
-        self.opt_dsc = optim.Adam(lr=learning_rate, betas=(beta1, beta2))
+        self.opt_gen = optim.Adam(self.generator.parameters(), lr=learning_rate, betas=(beta1, beta2))
+        self.opt_dsc = optim.Adam(self.discriminator.parameters(), lr=learning_rate, betas=(beta1, beta2))
 
     def generate_fake_input(self, batch_size):
         noise = torch.randn((batch_size, self.noise_dim, 1, 1)).to(self.device)
@@ -60,7 +60,7 @@ class GAN:
     
     def backprop_discriminator(self, loss_dsc):
         self.opt_dsc.zero_grad()
-        loss_dsc.backward()
+        loss_dsc.backward(retain_graph=True)
         self.opt_dsc.step()
 
     def loss_generator(self, criterion, fake):
@@ -72,7 +72,7 @@ class GAN:
         loss_gen.backward()
         self.opt_gen.step()
 
-    def print_training_stats(num_epochs, epoch, batch_idx, dataset_size, loss_gen, loss_dsc):
+    def print_training_stats(self, num_epochs, epoch, batch_idx, dataset_size, loss_gen, loss_dsc):
         print(
                     f"EPOCH: [{epoch}/{num_epochs}], Batch [{batch_idx} / {dataset_size}]\
                         Loss Generator: {loss_gen}, Loss Discriminator: {loss_dsc}"
@@ -88,7 +88,7 @@ class GAN:
     def plot_grid(self, images, num_rows, num_cols, figsize=(10, 10)):
         fig, axes = plt.subplots(num_rows, num_cols, figsize=figsize)
         for i, ax in enumerate(axes.flat):
-            ax.imshow(images[i].permute(1, 2, 0))  
+            ax.imshow(images[i].permute(1, 2, 0).clamp(0, 1))  
             ax.axis('off')
         plt.subplots_adjust(wspace=0.1, hspace=0.1)  
         plt.show()

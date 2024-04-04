@@ -1,7 +1,7 @@
 import torch.nn as nn
 
 
-class Generator(nn.module):
+class Generator(nn.Module):
     def __init__(self, noise_dim, channels_img, features_g):
         super(Generator, self).__init__()
         self.gen = nn.Sequential(
@@ -32,8 +32,11 @@ class Generator(nn.module):
                 nn.init.constant_(m.weight, 1)
                 nn.init.constant_(m.bias, 0)
 
+    def forward(self, x):
+        return self.gen(x)
 
-class Discriminator(nn.module):
+
+class Discriminator(nn.Module):
     def __init__(self, channels_img, features_d):
         super(Discriminator, self).__init__()
         self.dsc = nn.Sequential(
@@ -64,4 +67,7 @@ class Discriminator(nn.module):
             elif isinstance(m, nn.BatchNorm2d):
                 nn.init.constant_(m.weight, 1)
                 nn.init.constant_(m.bias, 0)
+
+    def forward(self, x):
+        return self.dsc(x)
 
