@@ -37,7 +37,7 @@ class GAN:
                 self.print_training_stats(num_epochs, epoch, batch_idx,
                                           len(loaded_data), loss_gen, loss_dsc)
                 generated_images = self.generate_samples(10)
-                self.plot_grid(generated_images, 5, 2)
+                self.plot_grid(generated_images, 5, 2, index=batch_idx)
                 
     def initialize_weigths(self):
         self.generator.initialize_weights()
@@ -74,7 +74,7 @@ class GAN:
 
     def print_training_stats(self, num_epochs, epoch, batch_idx, dataset_size, loss_gen, loss_dsc):
         print(
-                    f"EPOCH: [{epoch}/{num_epochs}], Batch [{batch_idx} / {dataset_size}]\
+                    f"EPOCH: [{epoch+1}/{num_epochs}], Batch [{batch_idx} / {dataset_size}]\
                         Loss Generator: {loss_gen}, Loss Discriminator: {loss_dsc}"
              )
         
@@ -85,11 +85,11 @@ class GAN:
         return generated_samples
     
     # TODO make visualization into separate class
-    def plot_grid(self, images, num_rows, num_cols, figsize=(10, 10)):
+    def plot_grid(self, images, num_rows, num_cols, figsize=(10, 10), index=0):
         fig, axes = plt.subplots(num_rows, num_cols, figsize=figsize)
         for i, ax in enumerate(axes.flat):
             ax.imshow(images[i].permute(1, 2, 0).clamp(0, 1))  
             ax.axis('off')
         plt.subplots_adjust(wspace=0.1, hspace=0.1)  
-        plt.show()
+        plt.savefig("wykres"+str(index)+".png")
     
