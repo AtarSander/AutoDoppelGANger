@@ -2,7 +2,7 @@ import torch
 import torch.optim as optim
 import torch.nn as nn
 import matplotlib.pyplot as plt
-from model import Generator, Discriminator
+from src.model import Generator, Discriminator
 from torch.utils.data import DataLoader
 
 

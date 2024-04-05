@@ -1,4 +1,4 @@
-from car_finder import CarFinder
+from src.car_finder import CarFinder
 import cv2
 
 

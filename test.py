@@ -1,6 +1,6 @@
-from gan import GAN
-from car_cutter import CarCutter
-from data_preprocessor import DataPreprocessor
+from src.gan import GAN
+from src.car_cutter import CarCutter
+from src.data_preprocessor import DataPreprocessor
 from nuimages import NuImages
 import torch
 
