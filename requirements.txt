@@ -1,0 +1,8 @@
+opencv-python
+torch 
+torchvision 
+torchaudio
+numpy==1.26.2
+pandas==2.2.1
+nuscenes-devkit==1.1.11
+matplotlib==3.5.3
