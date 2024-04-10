@@ -8,8 +8,8 @@ from torch.utils.data import DataLoader
 
 class GAN:
     def __init__(self, features_g, features_d, channels_img, noise_dim, device):
-        self.generator = Generator(noise_dim, channels_img, features_g)
-        self.discriminator = Discriminator(channels_img, features_d)
+        self.generator = Generator(noise_dim, channels_img, features_g, device)
+        self.discriminator = Discriminator(channels_img, features_d, device)
         self.device = device
         self.noise_dim = noise_dim
 
@@ -33,12 +33,12 @@ class GAN:
                 loss_gen = self.loss_generator(criterion, fake)
                 self.backprop_generator(loss_gen)
 
-            if batch_idx % 100 == 0:
-                self.print_training_stats(num_epochs, epoch, batch_idx,
-                                          len(loaded_data), loss_gen, loss_dsc)
-                generated_images = self.generate_samples(10)
-                self.plot_grid(generated_images, 5, 2, index=batch_idx)
-                
+                if batch_idx % 100 == 0:
+                    self.print_training_stats(num_epochs, epoch, batch_idx,
+                                                len(loaded_data), loss_gen, loss_dsc)
+                    generated_images = self.generate_samples(10)
+                    self.plot_grid(generated_images, 5, 2, index=batch_idx)
+
     def initialize_weigths(self):
         self.generator.initialize_weights()
         self.discriminator.initialize_weights()
@@ -57,7 +57,7 @@ class GAN:
         loss_dsc_real = criterion(dsc_real, torch.ones_like(dsc_real))
         loss_dsc_fake = criterion(dsc_fake, torch.zeros_like(dsc_fake))
         return loss_dsc_real + loss_dsc_fake
-    
+
     def backprop_discriminator(self, loss_dsc):
         self.opt_dsc.zero_grad()
         loss_dsc.backward(retain_graph=True)
@@ -66,7 +66,7 @@ class GAN:
     def loss_generator(self, criterion, fake):
         gen_fake = self.discriminator(fake).reshape(-1)
         return criterion(gen_fake, torch.ones_like(gen_fake))
-    
+
     def backprop_generator(self, loss_gen):
         self.opt_gen.zero_grad()
         loss_gen.backward()
@@ -77,19 +77,23 @@ class GAN:
                     f"EPOCH: [{epoch+1}/{num_epochs}], Batch [{batch_idx} / {dataset_size}]\
                         Loss Generator: {loss_gen}, Loss Discriminator: {loss_dsc}"
              )
-        
+
     def generate_samples(self, num_samples):
         noise = torch.randn((num_samples, self.noise_dim, 1, 1)).to(self.device)
         with torch.no_grad():
             generated_samples = self.generator(noise)
-        return generated_samples
-    
+        return generated_samples.cpu()
+
+    def save_models_weigths(self, path):
+        torch.save(self.generator.state_dict(), path+"/generator.pth")
+        torch.save(self.discriminator.state_dict(), path+"/discriminator.pth")
+
     # TODO make visualization into separate class
     def plot_grid(self, images, num_rows, num_cols, figsize=(10, 10), index=0):
         fig, axes = plt.subplots(num_rows, num_cols, figsize=figsize)
+        # images = images.detach().numpy()
         for i, ax in enumerate(axes.flat):
-            ax.imshow(images[i].permute(1, 2, 0).clamp(0, 1))  
+            ax.imshow(images[i].permute(1, 2, 0).clamp(0, 1))
             ax.axis('off')
-        plt.subplots_adjust(wspace=0.1, hspace=0.1)  
+        plt.subplots_adjust(wspace=0.1, hspace=0.1)
         plt.savefig("wykres"+str(index)+".png")
-    
