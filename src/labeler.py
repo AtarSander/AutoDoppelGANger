@@ -1,7 +1,7 @@
 import os
 import cv2
 from natsort import natsorted
-
+import matplotlib.pyplot as plt
 
 class Labeler:
     def label_loop(self, directory, sort_direction=None):
@@ -10,7 +10,20 @@ class Labeler:
         for filename in filenames:
             filepath = os.path.join(directory, filename)
             print(filename)
-            # self.print_image(filepath, filename)
+            x = [1, 2, 3, 4, 5]
+            y = [2, 3, 5, 7, 11]
+
+            # Create plot
+            plt.plot(x, y)
+
+            # Add labels and title
+            plt.xlabel('X-axis')
+            plt.ylabel('Y-axis')
+            plt.title('Example Plot')
+
+            # Display plot
+            plt.show()
+            self.print_image(filepath, filename)
             self.label_file(filename, filepath)
 
     def label_file(self, filename, filepath):
@@ -41,4 +54,4 @@ class Labeler:
 
 
 labeler = Labeler()
-labeler.label_loop("dataset/images")
+labeler.label_loop("dataset/images", sort_direction=1)

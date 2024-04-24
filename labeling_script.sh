@@ -21,16 +21,16 @@ for file in ./dataset/car_cut/*; do
 
     case $key in
         f)
-            mv "$file" ./datasets_labeled/front/
+            mv "$file" /datasets_labeled/front/images/
             ;;
         b)
-            mv "$file" ./datasets_labeled/back/
+            mv "$file" /datasets_labeled/back/images/
             ;;
         t)
-            rm "$file" 
+            rm "$file"
             ;;
         s)
-            mv "$file" ./datasets_labeled/side/
+            mv "$file" /datasets_labeled/side/images/
             ;;
         q)
             exit 0
