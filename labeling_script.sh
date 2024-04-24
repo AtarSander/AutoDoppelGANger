@@ -34,7 +34,7 @@ for file in "$DATASET_PATH"/*; do
             mv "$file" "$BACK_PATH"/
             ;;
         t)
-            rm "$file" 
+            rm "$file"
             ;;
         s)
             mv "$file" "$SIDE_PATH"/

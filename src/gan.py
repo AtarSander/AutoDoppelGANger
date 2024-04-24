@@ -10,13 +10,14 @@ from torch.utils.tensorboard import SummaryWriter
 
 
 class GAN:
-    def __init__(self, features_g, features_d, channels_img, noise_dim, device):
+    def __init__(self, features_g, features_d, channels_img, noise_dim, device, log_dir):
         self.generator = Generator(noise_dim, channels_img, features_g, device)
         self.discriminator = Discriminator(channels_img, features_d, device)
         self.device = device
         self.noise_dim = noise_dim
+        self.log_dir = log_dir
 
-    def train(self, dataset, num_epochs, batch_size, learning_rate, beta1=0.5, beta2=0.999):
+    def train(self, dataset, num_epochs, batch_size, learning_rate, beta1=0.5, beta2=0.999, time_limit = 1):
         loaded_data = DataLoader(dataset, batch_size=batch_size, shuffle=True)
         self.initialize_weigths()
         self.setup_optimizers(learning_rate, beta1, beta2)
@@ -26,12 +27,14 @@ class GAN:
         self.discriminator.train()
 
         fixed_noise = torch.randn(32, self.noise_dim, 1, 1).to(self.device)
-        writer_real = SummaryWriter(f"logs/real")
-        writer_fake = SummaryWriter(f"logs/fake")
+        writer_real = SummaryWriter(self.log_dir+"/real")
+        writer_fake = SummaryWriter(self.log_dir+"/fake")
         step = 0
 
         start_time = time.time()
-        for epoch in range(num_epochs):
+        epoch = 0
+        while ((time.time() - start_time)/60 < time_limit):
+        # for epoch in range(num_epochs):
             for batch_idx, (real, _) in enumerate(loaded_data):
                 real = real.to(self.device)
                 fake = self.generate_fake_input(batch_size)
@@ -49,7 +52,7 @@ class GAN:
                     # self.plot_grid(generated_images, 5, 2, index=batch_idx)
                     self.tensor_board_grid(fixed_noise, writer_real, writer_fake, real, step)
                     step += 1
-
+            epoch+=1
             self.print_time(start_time)
 
     def initialize_weigths(self):
@@ -98,7 +101,7 @@ class GAN:
         print(f"Time elapsed: {((time.time() - start_time)/60):.2f} min")
 
     def generate_samples(self, num_samples, noise=None):
-        if noise is not None:
+        if noise is None:
             noise = torch.randn(num_samples, self.noise_dim, 1, 1).to(self.device)
         with torch.no_grad():
             generated_samples = self.generator.forward(noise)

@@ -11,3 +11,6 @@ class ProgressBar:
         percent = 100 * (progress/self.total)
         bar = chr(9608) * int(percent) + chr(9617) * (100 - int(percent))
         print(f"\r|{bar}| {percent:.2f}%", end="\r")
+
+    def finish(self):
+        print()
