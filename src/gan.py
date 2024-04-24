@@ -114,9 +114,9 @@ class GAN:
         fixed_noise = torch.randn(32, self.noise_dim, 1, 1).to(self.device)
         return fixed_noise
 
-    def save_models_weigths(self, path):
-        torch.save(self.generator.state_dict(), path+"/generator.pth")
-        torch.save(self.discriminator.state_dict(), path+"/discriminator.pth")
+    def save_models_weigths(self, path_dsc, path_gen):
+        torch.save(self.discriminator.state_dict(), path_dsc)
+        torch.save(self.generator.state_dict(), path_gen)
 
     def load_model_weights(self, path_dsc, path_gen):
         self.discriminator.load_state_dict(torch.load(path_dsc))

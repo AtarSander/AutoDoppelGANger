@@ -92,11 +92,7 @@ class ModelEval:
         if not np.isfinite(sqrt_term).all():
             offset = np.eye(sigma1.shape[0]) * 1e-6
             sqrt_term = sqrtm((sigma1 + offset) @ (sigma2 + offset), disp=False)[0]
-        print(type(sqrt_term))
-        a = np.linalg.norm(mu1 - mu2)
-        b = np.trace(sigma1 + sigma2 - 2 * sqrt_term)
-        print(type(sigma1), type(sigma2))
-        fid = a+b
-        return fid
+        fid = np.linalg.norm(mu1 - mu2)+np.trace(sigma1 + sigma2 - 2 * sqrt_term)
+        return np.real(fid)
 
 
