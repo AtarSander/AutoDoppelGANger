@@ -1,13 +1,18 @@
 #!/bin/bash
 
+DATASET_PATH="./dataset/car_cut"
+FRONT_PATH="./datasets_labeled/front"
+BACK_PATH="./datasets_labeled/back"
+SIDE_PATH="./datasets_labeled/side"
+
 TERMINAL_WINDOW_ID=$(xdotool getwindowfocus)
 
-for file in ./dataset/car_cut/*; do
+for file in "$DATASET_PATH"/*; do
     echo "File: $file"
     echo "Click 'f' to move file to front, 'b' to back, 's' to side, 'q' to quit"
 
 
-    feh -g 800x600 -x "$file" &
+    feh --auto-zoom -x -g +0+0 "$file" &
 
     FEH_PID=$!
 
@@ -21,16 +26,16 @@ for file in ./dataset/car_cut/*; do
 
     case $key in
         f)
-            mv "$file" /datasets_labeled/front/images/
+            mv "$file" "$FRONT_PATH"/
             ;;
         b)
-            mv "$file" /datasets_labeled/back/images/
+            mv "$file" "$BACK_PATH"/
             ;;
         t)
             rm "$file"
             ;;
         s)
-            mv "$file" /datasets_labeled/side/images/
+            mv "$file" "$SIDE_PATH"/
             ;;
         q)
             exit 0
