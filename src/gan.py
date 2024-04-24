@@ -60,6 +60,9 @@ class GAN:
         self.generator.initialize_weights()
         self.discriminator.initialize_weights()
 
+    def load_weights(self, gen_filepath, dsc_filepath):
+        pass
+
     def setup_optimizers(self, learning_rate, beta1, beta2):
         self.opt_gen = optim.Adam(self.generator.parameters(), lr=learning_rate, betas=(beta1, beta2))
         self.opt_dsc = optim.Adam(self.discriminator.parameters(), lr=learning_rate, betas=(beta1, beta2))

@@ -35,6 +35,9 @@ class Generator(nn.Module):
                 nn.init.constant_(m.weight, 1)
                 nn.init.constant_(m.bias, 0)
 
+    def load_weights(self, filepath):
+        pass
+
     def forward(self, x):
         return self.gen(x)
 
@@ -74,6 +77,9 @@ class Discriminator(nn.Module):
             elif isinstance(m, nn.BatchNorm2d):
                 nn.init.constant_(m.weight, 1)
                 nn.init.constant_(m.bias, 0)
+
+    def load_weights(self, filepath):
+        pass
 
     def forward(self, x):
         return self.dsc(x)
