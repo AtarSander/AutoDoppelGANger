@@ -23,6 +23,7 @@ class CarCutter:
             self.progress_bar.update(100, img_id)
             for car_id, vehicle_bbox in enumerate(vehicles_bboxes):
                 self.cut_out_bbox(src_path, vehicle_bbox, out_path+str(car_id)+".jpg")
+        self.progress_bar.finish()
 
     def cut_out_bbox(self, image_path, bbox, output_path):
         image = cv2.imread(image_path)

@@ -16,6 +16,7 @@ class DataAugmenter:
             self.progress_bar.update(100, f_id)
             for new_filename, image in augmented_images.items():
                 self.save_image(image, new_filename)
+        self.progress_bar.finish()
 
     def create_variations(self, filename):
         augmented_images = {}
@@ -47,18 +48,18 @@ class DataAugmenter:
         image_float = image.astype(np.float32) / 255.0
         adjusted_image = image_float + brightness_factor
         return self.reformat_to_int(adjusted_image)
-    
+
     def add_gaussian_noise(self, image, mean, sigma, scale_factor = 0.02):
         random_noise = np.random.normal(mean, sigma, image.shape)
         image_float = image.astype(np.float32) /255.0
         adjusted_image = image_float + random_noise * scale_factor
         return self.reformat_to_int(adjusted_image)
-    
+
     def reformat_to_int(self, adjusted_image):
         adjusted_image = np.clip(adjusted_image, 0, 1)
         adjusted_image = (adjusted_image * 255).astype(np.uint8)
         return adjusted_image
-    
+
     def set_filename(self, type, org_filename):
         tmp = org_filename.rstrip(".jpg")
 
