@@ -7,6 +7,8 @@ SIDE_PATH="./datasets_labeled/side"
 
 TERMINAL_WINDOW_ID=$(xdotool getwindowfocus)
 
+a=0
+
 for file in "$DATASET_PATH"/*; do
     echo "File: $file"
     echo "Click 'f' to move file to front, 'b' to back, 's' to side, 'q' to quit"
@@ -44,4 +46,6 @@ for file in "$DATASET_PATH"/*; do
             echo "Unknown input: $key"
             ;;
     esac
+    ((a++))
+    echo $a
 done
