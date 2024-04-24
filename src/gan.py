@@ -18,7 +18,7 @@ class GAN:
         self.log_dir = log_dir
 
     def train(self, dataset, num_epochs, batch_size, learning_rate, beta1=0.5, beta2=0.999, time_limit = 1):
-        loaded_data = DataLoader(dataset, batch_size=batch_size, shuffle=True)
+        self.load_data(dataset, batch_size)
         self.initialize_weigths()
         self.setup_optimizers(learning_rate, beta1, beta2)
         criterion = nn.BCELoss()
@@ -26,16 +26,14 @@ class GAN:
         self.generator.train()
         self.discriminator.train()
 
-        fixed_noise = torch.randn(32, self.noise_dim, 1, 1).to(self.device)
-        writer_real = SummaryWriter(self.log_dir+"/real")
-        writer_fake = SummaryWriter(self.log_dir+"/fake")
+        fixed_noise = self.setup_tensorboard()
         step = 0
 
         start_time = time.time()
         epoch = 0
         while ((time.time() - start_time)/60 < time_limit):
         # for epoch in range(num_epochs):
-            for batch_idx, (real, _) in enumerate(loaded_data):
+            for batch_idx, (real, _) in enumerate(self.loaded_data):
                 real = real.to(self.device)
                 fake = self.generate_fake_input(batch_size)
 
@@ -47,13 +45,16 @@ class GAN:
 
                 if batch_idx % 100 == 0:
                     self.print_training_stats(num_epochs, epoch, batch_idx,
-                                              len(loaded_data), loss_gen, loss_dsc)
+                                              len(self.loaded_data), loss_gen, loss_dsc)
                     # generated_images = self.generate_samples(10, fixed_noise)
                     # self.plot_grid(generated_images, 5, 2, index=batch_idx)
-                    self.tensor_board_grid(fixed_noise, writer_real, writer_fake, real, step)
+                    self.tensor_board_grid(fixed_noise, self.writer_real, self.writer_fake, real, step)
                     step += 1
             epoch+=1
             self.print_time(start_time)
+
+    def load_data(self, dataset, batch_size):
+        self.loaded_data = DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
     def initialize_weigths(self):
         self.generator.initialize_weights()
@@ -107,9 +108,19 @@ class GAN:
             generated_samples = self.generator.forward(noise)
         return generated_samples.cpu()
 
-    def save_models_weigths(self, path):
-        torch.save(self.generator.state_dict(), path+"/generator.pth")
-        torch.save(self.discriminator.state_dict(), path+"/discriminator.pth")
+    def setup_tensorboard(self):
+        self.writer_real = SummaryWriter(self.log_dir+"/real")
+        self.writer_fake = SummaryWriter(self.log_dir+"/fake")
+        fixed_noise = torch.randn(32, self.noise_dim, 1, 1).to(self.device)
+        return fixed_noise
+
+    def save_models_weigths(self, path_dsc, path_gen):
+        torch.save(self.discriminator.state_dict(), path_dsc)
+        torch.save(self.generator.state_dict(), path_gen)
+
+    def load_model_weights(self, path_dsc, path_gen):
+        self.discriminator.load_state_dict(torch.load(path_dsc))
+        self.generator.load_state_dict(torch.load(path_gen))
 
     # TODO make visualization into separate class
     def plot_grid(self, images, num_rows, num_cols, figsize=(10, 10), index=0):
