@@ -4,6 +4,7 @@ import torchvision.transforms as transforms
 import torchvision.models as models
 from scipy.linalg import sqrtm
 
+
 class ModelEval:
     def __init__(self, batch_size, device):
         self.batch_size = batch_size
