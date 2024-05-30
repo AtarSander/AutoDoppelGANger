@@ -1,6 +1,6 @@
 # AutoDoppelGANger
 ## Further Development
->All further development will be conducted in [AutoDoppelGANger-GOLEM](https://github.com/AtarSander/>AutoDoppelGANger-GOLEM) repository.
+>Old version. All further development will be conducted in [AutoDoppelGANger-GOLEM](https://github.com/AtarSander/AutoDoppelGANger-GOLEM) repository.
 ## Summary
 AutoDoppelGANger is a DCGAN model trained to generate images of cars based on photos from NuImages dataset. The model was created with the execution of a full machine learning pipelining, from data collection to validation and evaluation of model results. Core elements of the project:
 - Data gathering(cutting out cars images from NuImages dataset)
